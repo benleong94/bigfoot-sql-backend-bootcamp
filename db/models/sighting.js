@@ -1,21 +1,44 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Sighting extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate() {
-      // define association here
+  class sighting extends Model {
+
+    static associate(models) {
+      this.hasMany(models.comment)
+      this.belongsToMany(models.category, { through: "sightingsCategories" });
     }
   }
-  Sighting.init(
+  sighting.init(
     {
-      date: DataTypes.DATE,
-      location: DataTypes.STRING,
-      notes: DataTypes.TEXT,
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      date: {
+        type: DataTypes.DATE,
+      },
+      location: {
+        type: DataTypes.STRING,
+      },
+      notes: {
+        type: DataTypes.TEXT,
+      }, 
+      createdAt: {
+        field: "created_at",
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: new Date(),
+      },
+      updatedAt: {
+        field: "updated_at",
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: new Date(),
+      },
     },
     {
       sequelize,
@@ -23,5 +46,5 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
-  return Sighting;
+  return sighting;
 };
